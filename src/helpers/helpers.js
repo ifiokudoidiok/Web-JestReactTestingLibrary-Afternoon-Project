@@ -25,6 +25,14 @@ export function multiply(a, b) {
 }
 
 export function personMaker(name, age) {
+  if(!name || !age){
+    return null;
+  }else if(typeof name !== 'string'){
+    throw new Error('This is not a name')
+  }else if(typeof age !== 'number' ){ throw new Error('This is not an age')}else if(age < 0){
+    throw new Error('Negative numbers not allowed')
+  }
+
   return {
     id: uuid(),
     name,
