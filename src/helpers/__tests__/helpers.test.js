@@ -37,7 +37,7 @@ describe('multiply', () => {
     expect(helpers.multiply( 2, 3)).not.toBe(7);
   });
   it('can multiply decimals', () => {
-    expect(helpers.multiply(-2.5, -3)).toBe(6);
+    expect(helpers.multiply(-2.5, -3)).toBe(7.5);
     expect(helpers.multiply( 2, 3)).not.toBe(7);
   });
 });
@@ -51,6 +51,8 @@ describe('personMaker', () => {
         age: 4,
       });
   });
+  
+  
 
   // write more tests! <===========================================
 });
