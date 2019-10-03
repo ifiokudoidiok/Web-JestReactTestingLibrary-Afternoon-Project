@@ -54,6 +54,36 @@ describe("Counter component", () => {
 
   it("prevents the count from going over an upper limit", () => {
     // implement
+    const incButton = tools.queryByTestId("incButton");
+
+    rtl.fireEvent.click(incButton);
+    expect(tools.queryByText(/0/)).not.toBeInTheDocument();
+    expect(tools.queryByText(/1/)).toBeInTheDocument();
+
+    rtl.fireEvent.click(incButton);
+    expect(tools.queryByText(/1/)).not.toBeInTheDocument();
+    expect(tools.queryByText(/2/)).toBeInTheDocument();
+
+    rtl.fireEvent.click(incButton);
+    expect(tools.queryByText(/2/)).not.toBeInTheDocument();
+    expect(tools.queryByText(/3/)).toBeInTheDocument();
+
+    rtl.fireEvent.click(incButton);
+    expect(tools.queryByText(/3/)).not.toBeInTheDocument();
+    expect(tools.queryByText(/4/)).toBeInTheDocument();
+
+    rtl.fireEvent.click(incButton);
+    expect(tools.queryByText(/4/)).not.toBeInTheDocument();
+    expect(tools.queryByText(/5/)).toBeInTheDocument();
+
+    rtl.fireEvent.click(incButton).fail();
+    // expect(tools.queryByText(/6/)).not.toBeInTheDocument();
+    // expect(tools.queryByText(/That's as high/i)).toBeInTheDocument(null);
+
+    
+    // rtl.fireEvent.click(incButton);
+    // expect(tools.queryByText(/5/)).toBeInTheDocument();
+
   });
 
   it("prevents the count from going under a lower limit", () => {
