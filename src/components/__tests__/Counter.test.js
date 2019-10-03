@@ -4,10 +4,11 @@ import * as rtl from "@testing-library/react";
 import Counter from "../Counter";
 
 let tools;
+let countLimit = 5;
 
 beforeEach(() => {
   rtl.cleanup();
-  tools = rtl.render(<Counter user="Peter" />);
+  tools = rtl.render(<Counter user="Peter" countLimit={countLimit} />);
 });
 
 describe("Counter component", () => {
@@ -45,7 +46,7 @@ describe("Counter component", () => {
     expect(tools.queryByText(/-1/)).toBeInTheDocument();
   });
 
-  it("can reset the count clicking rest", () => {
+  it("can reset the count clicking reset", () => {
     // implement
     const resetButton = tools.queryByTestId("resetButton");
     rtl.fireEvent.click(resetButton);
@@ -55,46 +56,60 @@ describe("Counter component", () => {
   it("prevents the count from going over an upper limit", () => {
     // implement
     const incButton = tools.queryByTestId("incButton");
-
-    rtl.fireEvent.click(incButton);
-    expect(tools.queryByText(/0/)).not.toBeInTheDocument();
-    expect(tools.queryByText(/1/)).toBeInTheDocument();
-
-    rtl.fireEvent.click(incButton);
-    expect(tools.queryByText(/1/)).not.toBeInTheDocument();
-    expect(tools.queryByText(/2/)).toBeInTheDocument();
-
-    rtl.fireEvent.click(incButton);
-    expect(tools.queryByText(/2/)).not.toBeInTheDocument();
-    expect(tools.queryByText(/3/)).toBeInTheDocument();
-
-    rtl.fireEvent.click(incButton);
-    expect(tools.queryByText(/3/)).not.toBeInTheDocument();
-    expect(tools.queryByText(/4/)).toBeInTheDocument();
-
-    rtl.fireEvent.click(incButton);
-    expect(tools.queryByText(/4/)).not.toBeInTheDocument();
-    expect(tools.queryByText(/5/)).toBeInTheDocument();
-
-    rtl.fireEvent.click(incButton).fail();
-    // expect(tools.queryByText(/6/)).not.toBeInTheDocument();
-    // expect(tools.queryByText(/That's as high/i)).toBeInTheDocument(null);
-
-    
-    // rtl.fireEvent.click(incButton);
-    // expect(tools.queryByText(/5/)).toBeInTheDocument();
-
+    for (let i = 0; i < countLimit + 1; i++) {
+      rtl.fireEvent.click(incButton);
+    }
+    expect(tools.queryByText(new RegExp(countLimit, "i"))).toBeInTheDocument();
   });
 
   it("prevents the count from going under a lower limit", () => {
     // implement
+    const decButton = tools.queryByTestId("decButton");
+    rtl.fireEvent.click(decButton);
+    expect(tools.queryByText(/0/)).not.toBeInTheDocument();
+    expect(tools.queryByText(/-1/)).toBeInTheDocument();
+
+    rtl.fireEvent.click(decButton);
+    expect(tools.queryByText(/-1/)).not.toBeInTheDocument();
+    expect(tools.queryByText(/-2/)).toBeInTheDocument();
+
+    rtl.fireEvent.click(decButton);
+    expect(tools.queryByText(/-2/)).not.toBeInTheDocument();
+    expect(tools.queryByText(/-3/)).toBeInTheDocument();
+
+    rtl.fireEvent.click(decButton);
+    expect(tools.queryByText(/-3/)).not.toBeInTheDocument();
+    expect(tools.queryByText(/-4/)).toBeInTheDocument();
+
+    rtl.fireEvent.click(decButton);
+    expect(tools.queryByText(/-4/)).not.toBeInTheDocument();
+    expect(tools.queryByText(/-5/)).toBeInTheDocument();
+
+    rtl.fireEvent.click(decButton);
+    expect(tools.queryByText(/-5/)).toBeInTheDocument();
   });
 
   it("shows a warning once we hit the upper limit of the counter", () => {
     // implement
+    const incButton = tools.queryByTestId("incButton");
+    for (let i = 0; i < countLimit; i++) {
+      rtl.fireEvent.click(incButton);
+    }
+    expect(tools.queryByText(new RegExp(countLimit))).toBeInTheDocument();
+    expect(
+      tools.queryByText(new RegExp("That's as high as", "ig"))
+    ).toBeInTheDocument();
   });
 
   it("shows a warning once we hit the lower limit of the counter", () => {
     // implement
+    const decButton = tools.queryByTestId("decButton");
+    for (let i = 0; i > -countLimit ; i--) {
+      rtl.fireEvent.click(decButton);
+    }
+    expect(tools.queryByText(new RegExp(-countLimit, "i"))).toBeInTheDocument();
+    expect(
+      tools.queryByText(new RegExp("That's as low as", "ig"))
+    ).toBeInTheDocument();
   });
 });
